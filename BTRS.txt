@@ -1,0 +1,128 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#define MAX_SEATS 30
+#include <stdbool.h>
+
+
+char password[20]; // Global variable to store the password
+
+void set_password() {
+    bool is_password_set = false;
+
+    while (!is_password_set) {
+        printf("Please enter user password (up to 20 characters): ");
+        scanf("%19s", password); // Read in password (up to 19 characters)
+
+        if (password[0] != '\0') { // If the password is not empty
+            is_password_set = true;
+            printf("Password set successfully!\n");
+        } else {
+            printf("Password cannot be empty. Please try again.\n");
+        }
+    }
+
+}
+bool login() {
+    char input[20];
+
+    printf("Please enter your password: ");
+    scanf("%19s", input);
+
+    if (strcmp(input, password) == 0) {
+        printf("Login successful!\n");
+        return true;
+    } else {
+        printf("Incorrect password. Login failed.\n");
+        return false;
+    }
+}
+
+
+// Function to display the menu
+void display_menu() {
+    printf("\nBus Ticket Reservation System\n");
+    printf("------------------------------\n");
+    printf("1. View Seat Availability\n");
+    printf("2. Book a Seat\n");
+    printf("3. Cancel a Booking\n");
+    printf("4. Exit\n");
+}
+
+// Function to display seat availability
+void display_seats(int seats[]) {
+    printf("\nSeat Availability\n");
+    printf("------------------\n");
+    for (int i = 0; i < MAX_SEATS; i++) {
+        if (seats[i] == 0) {
+            printf("Seat %d is available.\n", i+1);
+        } else {
+            printf("Seat %d is not available.\n", i+1);
+        }
+    }
+}
+
+// Function to book a seat
+void book_seat(int seats[]) {
+    int seat_num;
+    printf("\nEnter the seat number you want to book: ");
+    scanf("%d", &seat_num);
+
+    if (seat_num < 1 || seat_num > MAX_SEATS) {
+        printf("\nInvalid seat number.\n");
+    } else if (seats[seat_num-1] == 1) {
+        printf("\nSorry, the seat is already booked.\n");
+    } else {
+        seats[seat_num-1] = 1;
+        printf("\nSeat %d has been booked successfully.\n", seat_num);
+    }
+}
+
+// Function to cancel a booking
+void cancel_booking(int seats[]) {
+    int seat_num;
+    printf("\nEnter the seat number you want to cancel booking for: ");
+    scanf("%d", &seat_num);
+
+    if (seat_num < 1 || seat_num > MAX_SEATS) {
+        printf("\nInvalid seat number.\n");
+    } else if (seats[seat_num-1] == 0) {
+        printf("\nSorry, the seat is not booked.\n");
+    } else {
+        seats[seat_num-1] = 0;
+        printf("\nBooking for seat %d has been cancelled successfully.\n", seat_num);
+    }
+}
+
+int main() {
+    int seats[MAX_SEATS] = {0};
+    int choice;
+
+    do {
+        display_menu();
+        printf("\nEnter your choice: ");
+        scanf("%d", &choice);
+
+        switch (choice) {
+            case 1:
+                display_seats(seats);
+                break;
+            case 2:
+                book_seat(seats);
+                break;
+            case 3:
+                cancel_booking(seats);
+                break;
+            case 4:
+                printf("\nExiting...\n");
+                break;
+            default:
+                printf("\nInvalid choice. Please try again.\n");
+                break;
+        }
+    } while (choice != 4);
+
+    return 0;
+}
+
+
